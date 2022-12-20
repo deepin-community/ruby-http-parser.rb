@@ -1,0 +1,46 @@
+#!/usr/bin/make -f
+#export DH_VERBOSE=1
+#
+# Uncomment to ignore all test failures (but the tests will run anyway)
+#export DH_RUBY_IGNORE_TESTS=all
+#
+# Uncomment to ignore some test failures (but the tests will run anyway).
+# Valid values:
+#export DH_RUBY_IGNORE_TESTS=ruby1.8 ruby1.9.1 require-rubygems
+#
+# If you need to specify the .gemspec (eg there is more than one)
+#export DH_RUBY_GEMSPEC=gem.gemspec
+
+BINARY_PKG := ruby-http-parser.rb
+
+%:
+	dh $@ --buildsystem=ruby --with ruby
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf doc
+
+override_dh_auto_build:
+	dh_auto_build
+	# build documentation
+	rdoc --main=README.md lib
+	rm -f doc/js/jquery.js
+
+override_dh_auto_install:
+	# use utf-8 locale so test cases work
+	LC_ALL=C.UTF-8 dh_auto_install
+
+override_dh_install:
+	# install docs
+	dh_install --package=$(BINARY_PKG)-doc doc/* \
+			usr/share/doc/$(BINARY_PKG)-doc/html/
+
+override_dh_link:
+	# link to jquery.js
+	dh_link --package=$(BINARY_PKG)-doc usr/share/javascript/jquery/jquery.js \
+			usr/share/doc/$(BINARY_PKG)-doc/html/js/jquery.js
+
+override_dh_compress:
+	# binary package ends with .rb, and, due to dh sequencer -X.rb nothing is
+	# compressed, hence, call dh_compress manually
+	dh_compress

@@ -1,0 +1,47 @@
+Source: ruby-http-parser.rb
+Maintainer: Debian Ruby Extras Maintainers <pkg-ruby-extras-maintainers@lists.alioth.debian.org>
+Uploaders: Pirate Praveen <praveen@debian.org>,
+           Per Andersson <avtobiff@gmail.com>
+Section: ruby
+Testsuite: autopkgtest-pkg-ruby
+Priority: optional
+Build-Depends: debhelper-compat (= 12),
+               gem2deb,
+               libhttp-parser-dev,
+               rake,
+               ruby-json,
+               ruby-rspec,
+               ruby-yajl
+Standards-Version: 4.5.1
+Vcs-Browser: https://salsa.debian.org/ruby-team/ruby-http-parser.rb
+Vcs-Git: https://salsa.debian.org/ruby-team/ruby-http-parser.rb.git
+Homepage: https://github.com/tmm1/http_parser.rb
+XS-Ruby-Versions: all
+Rules-Requires-Root: no
+
+Package: ruby-http-parser.rb
+Architecture: any
+XB-Ruby-Versions: ${ruby:Versions}
+Depends: ruby | ruby-interpreter,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Suggests: ruby-http-parser.rb-doc
+Description: Simple callback-based HTTP request/response parser
+ A simple callback-based HTTP request/response parser for writing http servers,
+ clients and proxies.
+ .
+ It is built on top of Joyent's libhttp-parser and it's Java port.
+
+Package: ruby-http-parser.rb-doc
+Architecture: all
+Section: doc
+Depends: libjs-jquery,
+         ${misc:Depends}
+Suggests: ruby-http-parser.rb
+Description: Simple callback-based HTTP request/response parser (documentation)
+ A simple callback-based HTTP request/response parser for writing http servers,
+ clients and proxies.
+ .
+ It is built on top of Joyent's libhttp-parser and it's Java port.
+ .
+ This package contains the html documentation for ruby-http-parser.rb.

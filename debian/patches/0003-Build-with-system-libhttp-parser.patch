@@ -1,0 +1,180 @@
+From: Per Andersson <avtobiff@gmail.com>
+Date: Mon, 17 Jun 2013 02:09:37 +0200
+Subject: Build with system libhttp-parser
+
+---
+ ext/ruby_http_parser/extconf.rb         | 37 +++++++++++++++++----------------
+ ext/ruby_http_parser/ruby_http_parser.c | 28 ++++++++++++-------------
+ 2 files changed, 33 insertions(+), 32 deletions(-)
+
+diff --git a/ext/ruby_http_parser/extconf.rb b/ext/ruby_http_parser/extconf.rb
+index d2f6e51..1d5ad3d 100644
+--- a/ext/ruby_http_parser/extconf.rb
++++ b/ext/ruby_http_parser/extconf.rb
+@@ -1,24 +1,25 @@
+ require 'mkmf'
+ 
+-# check out code if it hasn't been already
+-if Dir[File.expand_path('../vendor/http-parser/*', __FILE__)].empty?
+-  Dir.chdir(File.expand_path('../../../', __FILE__)) do
+-    xsystem 'git submodule init'
+-    xsystem 'git submodule update'
+-  end
+-end
++## check out code if it hasn't been already
++#if Dir[File.expand_path('../vendor/http-parser/*', __FILE__)].empty?
++#  Dir.chdir(File.expand_path('../../../', __FILE__)) do
++#    xsystem 'git submodule init'
++#    xsystem 'git submodule update'
++#  end
++#end
+ 
+-# mongrel and http-parser both define http_parser_(init|execute), so we
+-# rename functions in http-parser before using them.
+-vendor_dir = File.expand_path('../vendor/http-parser/', __FILE__)
+-src_dir = File.expand_path('../', __FILE__)
+-%w[ http_parser.c http_parser.h ].each do |file|
+-  File.open(File.join(src_dir, "ryah_#{file}"), 'w'){ |f|
+-    f.write File.read(File.join(vendor_dir, file)).gsub('http_parser', 'ryah_http_parser')
+-  }
+-end
++## mongrel and http-parser both define http_parser_(init|execute), so we
++## rename functions in http-parser before using them.
++#vendor_dir = File.expand_path('../vendor/http-parser/', __FILE__)
++#src_dir = File.expand_path('../', __FILE__)
++#%w[ http_parser.c http_parser.h ].each do |file|
++#  File.open(File.join(src_dir, "ryah_#{file}"), 'w'){ |f|
++#    f.write File.read(File.join(vendor_dir, file)).gsub('http_parser', 'ryah_http_parser')
++#  }
++#end
+ 
+-$CFLAGS << " -I#{src_dir}"
++#$CFLAGS << " -I#{src_dir}"
++$LDFLAGS << " -lhttp_parser"
+ 
+-dir_config("ruby_http_parser")
++dir_config("ruby_http_parser", '/usr/include', '/usr/lib/http-parser')
+ create_makefile("ruby_http_parser")
+diff --git a/ext/ruby_http_parser/ruby_http_parser.c b/ext/ruby_http_parser/ruby_http_parser.c
+index 5650652..3a447f5 100644
+--- a/ext/ruby_http_parser/ruby_http_parser.c
++++ b/ext/ruby_http_parser/ruby_http_parser.c
+@@ -1,6 +1,6 @@
+ #include "ruby.h"
+ #include "ext_help.h"
+-#include "ryah_http_parser.h"
++#include "http_parser.h"
+ 
+ #define GET_WRAPPER(N, from)  ParserWrapper *N = (ParserWrapper *)(from)->data;
+ #define HASH_CAT(h, k, ptr, len)                \
+@@ -14,7 +14,7 @@
+   } while(0)
+ 
+ typedef struct ParserWrapper {
+-  ryah_http_parser parser;
++  http_parser parser;
+ 
+   VALUE request_url;
+ 
+@@ -36,11 +36,11 @@ typedef struct ParserWrapper {
+   VALUE last_field_name;
+   VALUE curr_field_name;
+ 
+-  enum ryah_http_parser_type type;
++  enum http_parser_type type;
+ } ParserWrapper;
+ 
+ void ParserWrapper_init(ParserWrapper *wrapper) {
+-  ryah_http_parser_init(&wrapper->parser, wrapper->type);
++  http_parser_init(&wrapper->parser, wrapper->type);
+   wrapper->parser.status_code = 0;
+   wrapper->parser.http_major = 0;
+   wrapper->parser.http_minor = 0;
+@@ -98,7 +98,7 @@ static VALUE Smixed;
+ 
+ /** Callbacks **/
+ 
+-int on_message_begin(ryah_http_parser *parser) {
++int on_message_begin(http_parser *parser) {
+   GET_WRAPPER(wrapper, parser);
+ 
+   wrapper->request_url = rb_str_new2("");
+@@ -121,13 +121,13 @@ int on_message_begin(ryah_http_parser *parser) {
+   }
+ }
+ 
+-int on_url(ryah_http_parser *parser, const char *at, size_t length) {
++int on_url(http_parser *parser, const char *at, size_t length) {
+   GET_WRAPPER(wrapper, parser);
+   rb_str_cat(wrapper->request_url, at, length);
+   return 0;
+ }
+ 
+-int on_header_field(ryah_http_parser *parser, const char *at, size_t length) {
++int on_header_field(http_parser *parser, const char *at, size_t length) {
+   GET_WRAPPER(wrapper, parser);
+ 
+   if (wrapper->curr_field_name == Qnil) {
+@@ -140,7 +140,7 @@ int on_header_field(ryah_http_parser *parser, const char *at, size_t length) {
+   return 0;
+ }
+ 
+-int on_header_value(ryah_http_parser *parser, const char *at, size_t length) {
++int on_header_value(http_parser *parser, const char *at, size_t length) {
+   GET_WRAPPER(wrapper, parser);
+ 
+   int new_field = 0;
+@@ -186,7 +186,7 @@ int on_header_value(ryah_http_parser *parser, const char *at, size_t length) {
+   return 0;
+ }
+ 
+-int on_headers_complete(ryah_http_parser *parser) {
++int on_headers_complete(http_parser *parser) {
+   GET_WRAPPER(wrapper, parser);
+ 
+   VALUE ret = Qnil;
+@@ -207,7 +207,7 @@ int on_headers_complete(ryah_http_parser *parser) {
+   }
+ }
+ 
+-int on_body(ryah_http_parser *parser, const char *at, size_t length) {
++int on_body(http_parser *parser, const char *at, size_t length) {
+   GET_WRAPPER(wrapper, parser);
+ 
+   VALUE ret = Qnil;
+@@ -226,7 +226,7 @@ int on_body(ryah_http_parser *parser, const char *at, size_t length) {
+   }
+ }
+ 
+-int on_message_complete(ryah_http_parser *parser) {
++int on_message_complete(http_parser *parser) {
+   GET_WRAPPER(wrapper, parser);
+ 
+   VALUE ret = Qnil;
+@@ -246,7 +246,7 @@ int on_message_complete(ryah_http_parser *parser) {
+   }
+ }
+ 
+-static ryah_http_parser_settings settings = {
++static http_parser_settings settings = {
+   .on_message_begin = on_message_begin,
+   .on_url = on_url,
+   .on_header_field = on_header_field,
+@@ -256,7 +256,7 @@ static ryah_http_parser_settings settings = {
+   .on_message_complete = on_message_complete
+ };
+ 
+-VALUE Parser_alloc_by_type(VALUE klass, enum ryah_http_parser_type type) {
++VALUE Parser_alloc_by_type(VALUE klass, enum http_parser_type type) {
+   ParserWrapper *wrapper = ALLOC_N(ParserWrapper, 1);
+   wrapper->type = type;
+   wrapper->parser.data = wrapper;
+@@ -317,7 +317,7 @@ VALUE Parser_execute(VALUE self, VALUE data) {
+   DATA_GET(self, ParserWrapper, wrapper);
+ 
+   wrapper->stopped = Qfalse;
+-  size_t nparsed = ryah_http_parser_execute(&wrapper->parser, &settings, ptr, len);
++  size_t nparsed = http_parser_execute(&wrapper->parser, &settings, ptr, len);
+ 
+   if (wrapper->parser.upgrade) {
+     if (RTEST(wrapper->stopped))

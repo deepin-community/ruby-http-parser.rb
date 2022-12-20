@@ -1,0 +1,19 @@
+From: Per Andersson <avtobiff@gmail.com>
+Date: Mon, 17 Jun 2013 02:07:05 +0200
+Subject: Remove git ls-files call in gemspec
+
+---
+ http_parser.rb.gemspec | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/http_parser.rb.gemspec
++++ b/http_parser.rb.gemspec
+@@ -9,7 +9,7 @@
+   s.license = 'MIT'
+ 
+   s.homepage = "http://github.com/tmm1/http_parser.rb"
+-  s.files = `git ls-files`.split("\n") + Dir['ext/ruby_http_parser/vendor/**/*']
++#  s.files = `git ls-files`.split("\n") + Dir['ext/ruby_http_parser/vendor/**/*']
+ 
+   s.require_paths = ["lib"]
+   s.extensions    = ["ext/ruby_http_parser/extconf.rb"]

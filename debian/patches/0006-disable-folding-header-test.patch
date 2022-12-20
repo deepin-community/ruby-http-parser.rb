@@ -1,0 +1,34 @@
+Subject: Disable folding header test
+Author: Christoph Biedl <debian.axhn@manchmal.in-ulm.de>
+Bug-Debian: https://bugs.debian.org/881627
+
+--- a/spec/support/requests.json
++++ b/spec/support/requests.json
+@@ -440,27 +440,6 @@
+     "strict": true
+   },
+   {
+-    "name": "line folding in header value",
+-    "type": "HTTP_REQUEST",
+-    "raw": "GET / HTTP/1.1\r\nLine1:   abc\r\n\tdef\r\n ghi\r\n\t\tjkl\r\n  mno \r\n\t \tqrs\r\nLine2: \t line2\t\r\n\r\n",
+-    "should_keep_alive": true,
+-    "message_complete_on_eof": false,
+-    "http_major": 1,
+-    "http_minor": 1,
+-    "method": "GET",
+-    "query_string": "",
+-    "fragment": "",
+-    "request_path": "/",
+-    "request_url": "/",
+-    "num_headers": 2,
+-    "headers": {
+-      "Line1": "abcdefghijklmno qrs",
+-      "Line2": "line2\t"
+-    },
+-    "body": "",
+-    "strict": true
+-  },
+-  {
+     "name": "host terminated by a query string",
+     "type": "HTTP_REQUEST",
+     "raw": "GET http://hypnotoad.org?hail=all HTTP/1.1\r\n\r\n",

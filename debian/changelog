@@ -1,0 +1,86 @@
+ruby-http-parser.rb (0.6.0-deepin1) unstable; urgency=medium
+
+  * Rebuild
+
+ -- Deepin Packages Builder <packages@deepin.org>  Fri, 11 Nov 2022 18:04:36 +0800
+
+ruby-http-parser.rb (0.6.0-6) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
+    Repository-Browse.
+
+  [ Pirate Praveen ]
+  * Merge changes from nmu upload
+  * Bump Standards-Version to 4.5.1 (no changes needed)
+  * Update my display name in Uploaders
+
+ -- Pirate Praveen <praveen@debian.org>  Fri, 08 Jan 2021 19:23:35 +0530
+
+ruby-http-parser.rb (0.6.0-5.1) unstable; urgency=high
+
+  * Non-maintainer upload.
+  * Relax "post identity body world" test. Closes: #977750
+
+ -- Christoph Biedl <debian.axhn@manchmal.in-ulm.de>  Sun, 20 Dec 2020 10:39:19 +0100
+
+ruby-http-parser.rb (0.6.0-5) unstable; urgency=medium
+
+  * Team upload
+  * Drop unnecessary Conflicts field
+  * Add salsa-ci.yml
+  * Fix package wrt cme
+  * Add Rules-Requires-Root: no
+  * Fix insecure link
+
+ -- Utkarsh Gupta <utkarsh@debian.org>  Sun, 05 Apr 2020 19:01:59 +0530
+
+ruby-http-parser.rb (0.6.0-4) unstable; urgency=medium
+
+  * Team upload
+  * Remove version in the gem2deb build-dependency
+  * Use https:// in Vcs-* fields
+  * Run wrap-and-sort on packaging files
+  * Bump Standards-Version to 4.1.1 (no changes needed)
+  * Bump debhelper compatibility level to 10
+  * Add Testsuite field for autopkgtest
+  * Add 0006-disable-folding-header-test.patch to support newer http-parser
+    (Closes: #881627). Thanks Christoph Biedl for the patch!
+
+ -- Cédric Boutillier <boutil@debian.org>  Wed, 15 Nov 2017 23:15:54 +0100
+
+ruby-http-parser.rb (0.6.0-3) unstable; urgency=medium
+
+  [Sebastien Badia]
+  * Team upload.
+  * d/watch: Fall-back to Github (githubredir webservice was discontinued)
+
+  [Balasankar C]
+  * Team upload
+  * Tweak tests to support RSpec3
+  * Make debian/ruby-tests.rake file detect specs (Closes: #791885)
+  * Bump standards version (No change)
+
+ -- Balasankar C <balasankarc@autistici.org>  Mon, 20 Jul 2015 21:19:20 +0530
+
+ruby-http-parser.rb (0.6.0-2) unstable; urgency=low
+
+  * Team upload.
+  * Bump gem2deb buil-dep to 0.7.4~
+
+ -- Pirate Praveen <praveen@debian.org>  Thu, 03 Apr 2014 14:48:31 +0530
+
+ruby-http-parser.rb (0.6.0-1) unstable; urgency=low
+
+  * Team upload.
+  * New upstream stable release.
+  * Refresh patche (0002-Remove-git-ls-files-call-in-gemspec.patch).
+  * Bump standards version to 3.9.5 (no changes needed).
+
+ -- Pirate Praveen <praveen@debian.org>  Wed, 02 Apr 2014 22:41:57 +0530
+
+ruby-http-parser.rb (0.6.0~beta.2-1) unstable; urgency=low
+
+  * Initial release (Closes: #711595)
+
+ -- Per Andersson <avtobiff@gmail.com>  Mon, 17 Jun 2013 23:40:17 +0200

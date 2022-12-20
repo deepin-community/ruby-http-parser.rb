@@ -1,0 +1,7 @@
+0001-fix-default-encoding.patch
+0002-Remove-git-ls-files-call-in-gemspec.patch
+0003-Build-with-system-libhttp-parser.patch
+0004-Do-not-overload-loadpath.patch
+0005-tweak-to-support-rspec3.patch
+0006-disable-folding-header-test.patch
+0007-disable-identity-transfer-encoding-test.patch

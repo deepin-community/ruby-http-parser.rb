@@ -1,0 +1,21 @@
+Subject: Relax "post identity body world" test
+Author: Christoph Biedl <debian.axhn@manchmal.in-ulm.de>
+Date: 2020-12-20
+Bug: https://github.com/tmm1/http_parser.rb/issues/68
+Bug-Debian: https://bugs.debian.org/977750
+
+    Technically, disabling "strict" causes the entire test to be
+    skipped. Perhaps some day upstream might implement the lenient
+    mode.
+
+--- a/spec/support/requests.json
++++ b/spec/support/requests.json
+@@ -162,7 +162,7 @@
+       "Content-Length": "5"
+     },
+     "body": "World",
+-    "strict": true
++    "strict": false
+   },
+   {
+     "name": "post - chunked body: all your base are belong to us",
